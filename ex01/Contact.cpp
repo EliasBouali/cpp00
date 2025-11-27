@@ -1,6 +1,7 @@
 #include "Contact.hpp"
 #include <iostream>
 #include <iomanip>
+#include <cctype>
 
 static std::string limitToTenCharacters(const std::string &str)
 {
@@ -22,6 +23,19 @@ static void readNonEmptyLine(const std::string &prompt, std::string &field)
   }
 }
 
+static bool isNumber(const std::string &str)
+{
+  if (str.empty())
+    return false;
+  for (std::size_t i = 0; i < str.size(); i++)
+  {
+    if (!std::isdigit(str[i]))
+      return false;
+  }
+  return true;
+}
+
+
 Contact::Contact()
 : _firstName(), _lastName(), _nickname(), _phoneNumber(), _darkestSecrect()
 {
@@ -37,6 +51,12 @@ void Contact::input()
   readNonEmptyLine("Last name: ", _lastName);
   readNonEmptyLine("Nickname: ", _nickname);
   readNonEmptyLine("Phone number: ", _phoneNumber);
+  while (!isNumber(_phoneNumber))
+  {
+    std::cout << "Phone number must contain digits only. Try again: ";
+    if (!std::getline(std::cin, _phoneNumber))
+      return ;
+  }
   readNonEmptyLine("Darkest secret: ", _darkestSecrect);
 }
 
